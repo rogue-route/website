@@ -1,26 +1,125 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../styles/tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Dark mode is explicitly cut for v1 — see PROJECT.md § 8 */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand fonts — CSS vars injected by next/font in app/layout.tsx */
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-dm-mono);
+  --font-heading: var(--font-cormorant);
+  /* Brand colors exposed as Tailwind utilities */
+  --color-chalk-white: var(--rr-chalk-white);
+  --color-true-white:  var(--rr-true-white);
+  --color-carbon:      var(--rr-carbon);
+  --color-ash:         var(--rr-ash);
+  --color-fog:         var(--rr-fog);
+  --color-forest-ink:  var(--rr-forest-ink);
+  --color-raw-sage:    var(--rr-raw-sage);
+  --color-parchment:   var(--rr-parchment);
+  --color-terracotta:  var(--rr-terracotta);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * shadcn semantic tokens mapped to RogueRoute brand values.
+ * Dark mode is cut for v1; only :root is defined.
+ * Note: tokens.css (imported above) defines --rr-* raw values first.
+ */
+:root {
+  --background:             var(--rr-chalk-white);  /* #F8F7F4 */
+  --foreground:             var(--rr-carbon);        /* #111110 */
+  --card:                   var(--rr-true-white);
+  --card-foreground:        var(--rr-carbon);
+  --popover:                var(--rr-true-white);
+  --popover-foreground:     var(--rr-carbon);
+  /* Forest Ink is the ONLY CTA/primary color per PROJECT.md */
+  --primary:                var(--rr-forest-ink);   /* #1C3A2F */
+  --primary-foreground:     var(--rr-true-white);
+  /* Raw Sage is hover/secondary */
+  --secondary:              var(--rr-raw-sage);      /* #4A6741 */
+  --secondary-foreground:   var(--rr-true-white);
+  --muted:                  var(--rr-fog);           /* #E4E3DE */
+  --muted-foreground:       var(--rr-ash);           /* #6B6B67 */
+  --accent:                 var(--rr-parchment);     /* #C8B89A */
+  --accent-foreground:      var(--rr-carbon);
+  --destructive:            var(--rr-terracotta);    /* #B85C38 */
+  /* Fog is the ONLY border color per PROJECT.md */
+  --border:                 var(--rr-fog);           /* #E4E3DE */
+  --input:                  var(--rr-fog);
+  --ring:                   var(--rr-forest-ink);
+  /* Radius — minimal, clinical feel */
+  --radius: 0.375rem;
+  /* Sidebar (unused in v1 but shadcn requires these vars to exist) */
+  --sidebar:                    var(--rr-chalk-white);
+  --sidebar-foreground:         var(--rr-carbon);
+  --sidebar-primary:            var(--rr-forest-ink);
+  --sidebar-primary-foreground: var(--rr-true-white);
+  --sidebar-accent:             var(--rr-fog);
+  --sidebar-accent-foreground:  var(--rr-carbon);
+  --sidebar-border:             var(--rr-fog);
+  --sidebar-ring:               var(--rr-forest-ink);
+  /* Chart vars unused in v1 — set to neutral greys to avoid broken CSS */
+  --chart-1: #e4e3de;
+  --chart-2: #c8b89a;
+  --chart-3: #6b6b67;
+  --chart-4: #4a6741;
+  --chart-5: #1c3a2f;
+}
+
+/* .dark removed — dark mode is cut for v1 (see PROJECT.md § 8) */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+    /* DM Sans as body/UI font; fallback chain for SSR flash prevention */
+    font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  html {
+    @apply font-sans;
+  }
 }

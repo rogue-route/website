@@ -1,0 +1,32 @@
+/*
+ * styles/tokens.css — RogueRoute brand design tokens
+ * Source of truth: PROJECT.md § 3. Design System
+ * These are raw CSS custom properties. They are consumed by globals.css
+ * which maps them into shadcn's @theme and Tailwind utilities.
+ */
+
+:root {
+  /* ── Colors ─────────────────────────────────────── */
+  --rr-chalk-white: #f8f7f4;   /* Background */
+  --rr-true-white:  #ffffff;   /* Surface */
+  --rr-carbon:      #111110;   /* Text primary */
+  --rr-ash:         #6b6b67;   /* Text subtle */
+  --rr-fog:         #e4e3de;   /* Border / divider */
+  --rr-forest-ink:  #1c3a2f;   /* Primary CTA */
+  --rr-raw-sage:    #4a6741;   /* Hover / secondary */
+  --rr-parchment:   #c8b89a;   /* Warm accent (tags) */
+  --rr-terracotta:  #b85c38;   /* Error */
+
+  /* ── Typography ─────────────────────────────────── */
+  /* Font families are injected by next/font as CSS vars in layout.tsx:
+       --font-cormorant  (Cormorant Garamond)
+       --font-dm-sans    (DM Sans)
+       --font-dm-mono    (DM Mono)
+  */
+
+  /* ── Spacing ─────────────────────────────────────── */
+  --rr-section-padding-mobile:  64px;
+  --rr-section-padding-desktop: 96px;
+  --rr-container-max:           1200px;
+  --rr-side-padding-mobile:     20px;
+}
