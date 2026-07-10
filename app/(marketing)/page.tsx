@@ -1,5 +1,6 @@
 /**
  * Task 0.2 test page — shows every primitive variant.
+ * HeroSection (Task 2.1) added above the primitives showcase.
  * This page will be replaced in Task 2.5 when the landing page is assembled.
  */
 import { Button }  from "@/components/primitives/Button";
@@ -7,11 +8,17 @@ import { Input }   from "@/components/primitives/Input";
 import { Label }   from "@/components/primitives/Label";
 import { Badge }   from "@/components/primitives/Badge";
 import { Divider } from "@/components/primitives/Divider";
+import { HeroSection } from "@/components/sections/landing/HeroSection";
 
 export default function PrimitivesTestPage() {
   return (
     // Layout owns <main>; this page renders its content directly into it.
-    <div className="bg-chalk-white px-5 py-16">
+    <div className="bg-chalk-white">
+      {/* ── Task 2.1 — Hero section ─────────────────────────────────── */}
+      <HeroSection />
+
+      {/* ── Task 0.2 — Primitives showcase (below hero until Task 2.5) ── */}
+      <div className="px-5 py-16">
       <div className="mx-auto max-w-[600px] space-y-12">
 
         {/* Page header */}
@@ -127,6 +134,7 @@ export default function PrimitivesTestPage() {
         </section>
 
       </div>
+      </div>{/* end px-5 py-16 wrapper */}
     </div>
   );
 }

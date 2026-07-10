@@ -4,12 +4,16 @@
  */
 import { MarketingLayout } from "@/components/layouts/MarketingLayout";
 import { NavBar } from "@/components/sections/shared/NavBar";
+import { Footer } from "@/components/sections/shared/Footer";
 
 export default function MarketingRouteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // footer prop omitted — built in Task 1.2
-  return <MarketingLayout nav={<NavBar />}>{children}</MarketingLayout>;
+  return (
+    <MarketingLayout nav={<NavBar />} footer={<Footer />}>
+      {children}
+    </MarketingLayout>
+  );
 }

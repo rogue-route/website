@@ -28,15 +28,17 @@ Work top to bottom. Check a box only when the deliverable actually renders/works
   *Deliverable: nav works on all breakpoints.*
   > Note: Framer Motion installed (pre-authorised in tech stack). NavBar is a `"use client"` component wired into `MarketingLayout` via the existing `nav` prop — no layout file restructuring needed. Mobile overlay uses `AnimatePresence` with a 5-line fade/slide variant (PROJECT.md § 5 spec). Hamburger icon morphs to X via pure CSS transforms (no second icon set needed). Body scroll lock implemented with a `useEffect` toggling `overflow-hidden` on `document.body` — no library. Nav links: Home, About + a Forest Ink CTA to `/quiz`.
 
-- [ ] **1.2 Footer**
+- [x] **1.2 Footer**
   Four columns desktop → single column mobile. Brand, nav links, socials, legal.
   *Deliverable: footer renders correctly at all sizes.*
+  > Note: Server Component — no interactivity needed. Wired into `MarketingLayout` via the existing `footer` prop; no layout restructuring required. Social icons are inline SVG (no icon library added). Legal links point to `#` as placeholder — policy pages are a future phase. Copyright year auto-generated with `new Date().getFullYear()`.
 
 ## Phase 2 — Landing Page
 
-- [ ] **2.1 Hero section**
+- [x] **2.1 Hero section**
   Separate mobile/desktop hero images via `next/image`, headline + subheadline, CTA button to `/quiz`. Simple fade/slide-in on load.
   *Deliverable: correct image loads per breakpoint, no layout shift.*
+  > Note: Created `components/sections/landing/HeroSection.tsx` as a `"use client"` component (Framer Motion requires it). Mobile (4:5 portrait) and desktop (16:9 landscape) images switched via `block md:hidden` / `hidden md:block` on two separate `<Image fill priority>` elements — both carry `priority` to preload for LCP. Forest Ink background on the wrapper prevents layout shift while images load or if image files are missing. A functional bottom-up gradient scrim (`from-black/55`) ensures headline legibility regardless of image content. CTA uses `buttonVariants()` applied directly to a `<Link>` — `@base-ui/react/button` doesn't support `asChild`/Slot so the Radix pattern is not available. Framer Motion `ease` typed as `[number, number, number, number]` tuple to satisfy Framer v12 type constraint. HeroSection wired into existing `app/(marketing)/page.tsx` above the Task 0.2 primitives showcase (page will be fully replaced in Task 2.5). **Drop `public/images/hero-mobile.jpg` (portrait) and `public/images/hero-desktop.jpg` (landscape) to show real images — section renders correctly without them in the meantime.**
 
 - [ ] **2.2 "Launching Soon" block**
   Static badge/banner below hero. No countdown logic needed unless you want a fixed date.
