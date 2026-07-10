@@ -46,7 +46,8 @@ export function MarketingLayout({
 
       {/* ── Page content ──────────────────────────────────────────────── */}
       {/* flex-1 pushes the footer to the bottom regardless of content height */}
-      <main className="flex-1">{children}</main>
+      {/* id="main-content" is the skip-link target added in Task 5.1 */}
+      <main id="main-content" className="flex-1">{children}</main>
 
       {/* ── Footer slot ───────────────────────────────────────────────── */}
       {footer ?? null}

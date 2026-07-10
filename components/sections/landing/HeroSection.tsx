@@ -136,7 +136,7 @@ export function HeroSection() {
                 "bg-true-white text-forest-ink hover:bg-fog"
               )}
             >
-              Find your routine →
+              Find your routine <span aria-hidden="true">→</span>
             </Link>
           </div>
         </motion.div>

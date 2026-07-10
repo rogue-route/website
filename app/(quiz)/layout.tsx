@@ -2,17 +2,24 @@
  * app/(quiz)/layout.tsx
  * Next.js App Router layout for the quiz route group.
  *
- * Delegates structure to the QuizLayout component.
- * The progressBar slot is empty for now — Task 4.4 will inject the real
- * ProgressIndicator without changing this file.
+ * Wraps all quiz pages in QuizProvider so state persists across
+ * /quiz → /quiz/stage-2 → /quiz/results (Task 4.2).
+ * ProgressIndicator injected into the progress bar slot (Task 4.4).
  */
 import { QuizLayout } from "@/components/layouts/QuizLayout";
+import { QuizProvider } from "@/components/layouts/QuizProvider";
+import { ProgressIndicator } from "@/components/compounds/quiz/ProgressIndicator";
 
 export default function QuizRouteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // progressBar prop intentionally omitted — built in Task 4.4
-  return <QuizLayout>{children}</QuizLayout>;
+  return (
+    <QuizProvider>
+      <QuizLayout progressBar={<ProgressIndicator />}>
+        {children}
+      </QuizLayout>
+    </QuizProvider>
+  );
 }

@@ -49,7 +49,8 @@ export function QuizLayout({ children, progressBar }: QuizLayoutProps) {
       {/* px-5 = 20px side padding (mobile spec from PROJECT.md).
           pt-10 gives breathing room between the progress bar and the card.
           max-w is handled by the QuizCard itself, not the layout. */}
-      <main className="flex flex-1 flex-col items-center px-5 pt-10 pb-16">
+      {/* id="main-content" is the skip-link target added in Task 5.1 */}
+      <main id="main-content" className="flex flex-1 flex-col items-center px-5 pt-10 pb-16">
         {children}
       </main>
     </div>

@@ -108,6 +108,34 @@
 
 /* .dark removed — dark mode is cut for v1 (see PROJECT.md § 8) */
 
+/*
+ * Skip-to-content link — Task 5.1
+ * Visually hidden until keyboard-focused. Reveals at top-left of viewport
+ * so keyboard users can bypass the nav and jump straight to page content.
+ * Uses Forest Ink background + True White text, matching the primary CTA
+ * colour rule from PROJECT.md § 3.
+ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--rr-forest-ink);
+  color: var(--rr-true-white);
+  font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 0 0 0.375rem 0.375rem;
+  text-decoration: none;
+  outline: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

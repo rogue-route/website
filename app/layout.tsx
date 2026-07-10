@@ -50,7 +50,19 @@ export default function RootLayout({
         cormorant.variable
       } ${dmSans.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        {/*
+         * Skip-to-content link — Task 5.1 accessibility fix.
+         * Visually hidden until focused by keyboard; reveals at top-left.
+         * Targets #main-content which each layout's <main> must carry.
+         * Uses brand focus colours (Forest Ink ring) consistent with the
+         * rest of the site's focus-visible pattern.
+         */}
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
