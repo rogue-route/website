@@ -62,17 +62,20 @@ Work top to bottom. Check a box only when the deliverable actually renders/works
 
 ## Phase 3 — About Us
 
-- [ ] **3.1 Manifesto section**
+- [x] **3.1 Manifesto section**
   Headline + brand story paragraph.
   *Deliverable: renders correctly.*
+  > Note: Created `components/sections/about/ManifestoSection.tsx` as a Server Component. Uses `<h1>` (only heading on the page at this level — correct landmark per accessibility rules; Task 5.1 will verify). Three body paragraphs following PROJECT.md § 2 brand voice: no forbidden words ("magic", "perfect", "instant", "guaranteed"), no exaggeration. Cormorant Garamond weight 400 at section-headline scale, DM Sans weight 300 for body. Section padding 64px mobile / 96px desktop per design system. Fog border rule as top separator, consistent with landing page sections.
 
-- [ ] **3.2 Values section**
+- [x] **3.2 Values section**
   3–4 value cards, simple fade-in on scroll (optional, skip if it adds friction).
   *Deliverable: cards render responsively.*
+  > Note: Created `components/sections/about/ValuesSection.tsx` as a Server Component. 4 value cards (Evidence first / Transparent by design / Formulated for individuals / Minimal, intentional) in a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` grid. Card number in DM Mono for the data/clinical aesthetic. True White card on Chalk White background, Fog border, no shadow — restraint over decoration (PROJECT.md § 2). Scroll-triggered animation skipped: PROJECT.md § 5 explicitly cuts scroll-triggered reveals for v1; TASK.md marked this as optional — PROJECT.md is the source of truth.
 
-- [ ] **3.3 Assemble About page**
+- [x] **3.3 Assemble About page**
   Compose into `app/(marketing)/about/page.tsx` with SEO metadata.
   *Deliverable: full About page.*
+  > Note: Replaced placeholder with `ManifestoSection` + `ValuesSection` composed in order. `metadata` export with distinct `title` ("About — RogueRoute") and `description` for search/social. OG and Twitter cards reuse `/images/og-image.jpg` (same reserved asset as landing page). Build clean: 0 errors, 0 warnings. `/about` route confirmed as static prerendered page in build output.
 
 ## Phase 4 — Skin Quiz
 
