@@ -31,6 +31,11 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "RogueRoute",
   description: "Skincare formulated to go rogue.",
+  // metadataBase: used to resolve relative OG/Twitter image URLs in production.
+  // Set to the deployed domain in Phase 6; localhost used in development.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
 };
 
 export default function RootLayout({

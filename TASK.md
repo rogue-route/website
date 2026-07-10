@@ -40,21 +40,25 @@ Work top to bottom. Check a box only when the deliverable actually renders/works
   *Deliverable: correct image loads per breakpoint, no layout shift.*
   > Note: Created `components/sections/landing/HeroSection.tsx` as a `"use client"` component (Framer Motion requires it). Mobile (4:5 portrait) and desktop (16:9 landscape) images switched via `block md:hidden` / `hidden md:block` on two separate `<Image fill priority>` elements — both carry `priority` to preload for LCP. Forest Ink background on the wrapper prevents layout shift while images load or if image files are missing. A functional bottom-up gradient scrim (`from-black/55`) ensures headline legibility regardless of image content. CTA uses `buttonVariants()` applied directly to a `<Link>` — `@base-ui/react/button` doesn't support `asChild`/Slot so the Radix pattern is not available. Framer Motion `ease` typed as `[number, number, number, number]` tuple to satisfy Framer v12 type constraint. HeroSection wired into existing `app/(marketing)/page.tsx` above the Task 0.2 primitives showcase (page will be fully replaced in Task 2.5). **Drop `public/images/hero-mobile.jpg` (portrait) and `public/images/hero-desktop.jpg` (landscape) to show real images — section renders correctly without them in the meantime.**
 
-- [ ] **2.2 "Launching Soon" block**
+- [x] **2.2 "Launching Soon" block**
   Static badge/banner below hero. No countdown logic needed unless you want a fixed date.
   *Deliverable: renders below hero.*
+  > Note: Created `components/sections/landing/LaunchBanner.tsx` as a Server Component. Parchment `Badge` used for the "Launching Soon" tag — correct use of the warm-accent token per PROJECT.md. Two-column layout on desktop (headline/copy left, DM Mono "Coming soon" detail right), single column on mobile. No countdown timer per task spec. Section padding follows PROJECT.md § 3 (64px mobile / 96px desktop).
 
-- [ ] **2.3 Waitlist / newsletter form**
+- [x] **2.3 Waitlist / newsletter form**
   Email field + submit, Zod validation, `/api/waitlist/route.ts` (placeholder storage for now), success/error states.
   *Deliverable: form validates and submits, shows success or error.*
+  > Note: Zod installed (v4 — already present as transitive dep, now explicit in package.json). Schema in `lib/validations/waitlist.ts` shared between client and server. `NewsletterForm` is a `"use client"` compound in `components/compounds/forms/` (local state only, no render-time fetch). `WaitlistSection` is a Server Component shell that wraps the form in a True White card. API route updated to parse body with shared schema and log the email. Zod v4 uses `.issues` not `.errors` on `ZodError` — fixed across all usages.
 
-- [ ] **2.4 Contact form**
+- [x] **2.4 Contact form**
   Name/email/message, Zod validation, `/api/contact/route.ts` (placeholder storage), loading/success/error states.
   *Deliverable: form fully functional end-to-end.*
+  > Note: Schema in `lib/validations/contact.ts`. `ContactForm` compound handles idle/loading/success/error states with per-field and form-level error display. Textarea is a native `<textarea>` styled with Tailwind to match the Input primitive — no shadcn Textarea installed (AGENTS.md § 9: prefer native). `ContactSection` mirrors `WaitlistSection` layout (two-column desktop, single-column mobile, True White card). All three states tested: field errors clear on re-type, form-level error shown on API failure, success card replaces form on 200.
 
-- [ ] **2.5 Assemble landing page**
+- [x] **2.5 Assemble landing page**
   Compose Hero + Launch banner + Waitlist + Contact + Footer into `app/(marketing)/page.tsx`, add basic SEO metadata.
   *Deliverable: full landing page works on mobile and desktop.*
+  > Note: `app/(marketing)/page.tsx` fully replaced — Task 0.2 primitives showcase removed, four section components composed in order. `metadata` export added with `title`, `description`, `openGraph`, and `twitter` fields using constants from `lib/constants/seo.ts`. `metadataBase` added to root `app/layout.tsx` using `NEXT_PUBLIC_SITE_URL` env var (falls back to `localhost:3000`) — silences Next.js OG image resolution warning. Footer is not imported here; it is injected by `app/(marketing)/layout.tsx` via `MarketingLayout` as before. Build clean: 0 errors, 0 warnings.
 
 ## Phase 3 — About Us
 

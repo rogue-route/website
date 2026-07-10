@@ -1,140 +1,54 @@
 /**
- * Task 0.2 test page — shows every primitive variant.
- * HeroSection (Task 2.1) added above the primitives showcase.
- * This page will be replaced in Task 2.5 when the landing page is assembled.
+ * Landing page — Task 2.5
+ *
+ * Composes all Phase 2 sections:
+ *   HeroSection (2.1) → LaunchBanner (2.2) → WaitlistSection (2.3) → ContactSection (2.4)
+ *
+ * Footer is injected by app/(marketing)/layout.tsx via MarketingLayout.
+ *
+ * SEO: Next.js App Router `metadata` export. og:image points to
+ * public/images/og-image.jpg — reserved in PROJECT.md, drop the file in
+ * to activate without any code change.
  */
-import { Button }  from "@/components/primitives/Button";
-import { Input }   from "@/components/primitives/Input";
-import { Label }   from "@/components/primitives/Label";
-import { Badge }   from "@/components/primitives/Badge";
-import { Divider } from "@/components/primitives/Divider";
+import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/landing/HeroSection";
+import { LaunchBanner } from "@/components/sections/landing/LaunchBanner";
+import { WaitlistSection } from "@/components/sections/landing/WaitlistSection";
+import { ContactSection } from "@/components/sections/landing/ContactSection";
+import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from "@/lib/constants/seo";
 
-export default function PrimitivesTestPage() {
+export const metadata: Metadata = {
+  title: DEFAULT_TITLE,
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    type: "website",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "RogueRoute — Evidence-based skincare, launching soon",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ["/images/og-image.jpg"],
+  },
+};
+
+export default function LandingPage() {
   return (
-    // Layout owns <main>; this page renders its content directly into it.
-    <div className="bg-chalk-white">
-      {/* ── Task 2.1 — Hero section ─────────────────────────────────── */}
+    // Layout owns <main>; page renders sections directly into it.
+    <>
       <HeroSection />
-
-      {/* ── Task 0.2 — Primitives showcase (below hero until Task 2.5) ── */}
-      <div className="px-5 py-16">
-      <div className="mx-auto max-w-[600px] space-y-12">
-
-        {/* Page header */}
-        <div>
-          <p className="text-xs tracking-[0.08em] uppercase text-ash">
-            Task 0.2 — Primitives
-          </p>
-          <h1
-            className="mt-1 text-carbon"
-            style={{
-              fontFamily: "var(--font-cormorant)",
-              fontSize: "clamp(28px, 6vw, 52px)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-            }}
-          >
-            Component primitives
-          </h1>
-        </div>
-
-        {/* ── Button ──────────────────────────────── */}
-        <section className="space-y-4">
-          <p className="text-xs tracking-[0.08em] uppercase text-ash">Button</p>
-          <Divider />
-
-          {/* Mobile: stack; desktop: row */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button variant="default" size="default">
-              Take the quiz
-            </Button>
-            <Button variant="secondary" size="default">
-              Learn more
-            </Button>
-            <Button variant="outline" size="default">
-              View details
-            </Button>
-            <Button variant="ghost" size="default">
-              Cancel
-            </Button>
-          </div>
-
-          {/* Sizes */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button variant="default" size="sm">Small</Button>
-            <Button variant="default" size="default">Default</Button>
-            <Button variant="default" size="lg">Large</Button>
-          </div>
-
-          {/* States */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button variant="default" disabled>Disabled</Button>
-            <Button variant="destructive" size="default">Destructive</Button>
-          </div>
-        </section>
-
-        {/* ── Label + Input ────────────────────────── */}
-        <section className="space-y-4">
-          <p className="text-xs tracking-[0.08em] uppercase text-ash">Input + Label</p>
-          <Divider />
-
-          <div className="space-y-2">
-            <Label htmlFor="email-test">Email address</Label>
-            <Input
-              id="email-test"
-              type="email"
-              placeholder="your@email.com"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="name-test">Full name</Label>
-            <Input
-              id="name-test"
-              type="text"
-              placeholder="Jane Smith"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="disabled-test">Disabled field</Label>
-            <Input
-              id="disabled-test"
-              type="text"
-              placeholder="Not editable"
-              disabled
-            />
-          </div>
-        </section>
-
-        {/* ── Badge ────────────────────────────────── */}
-        <section className="space-y-4">
-          <p className="text-xs tracking-[0.08em] uppercase text-ash">Badge</p>
-          <Divider />
-
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="default">Forest Ink</Badge>
-            <Badge variant="accent">Parchment tag</Badge>
-            <Badge variant="secondary">Raw Sage</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="ghost">Ghost</Badge>
-            <Badge variant="destructive">Error</Badge>
-          </div>
-        </section>
-
-        {/* ── Divider ──────────────────────────────── */}
-        <section className="space-y-4">
-          <p className="text-xs tracking-[0.08em] uppercase text-ash">Divider</p>
-          <Divider />
-          <Divider label="or" />
-          <p className="text-sm text-ash">
-            Plain rule above. Labelled rule with “or” above that.
-          </p>
-        </section>
-
-      </div>
-      </div>{/* end px-5 py-16 wrapper */}
-    </div>
+      <LaunchBanner />
+      <WaitlistSection />
+      <ContactSection />
+    </>
   );
 }
