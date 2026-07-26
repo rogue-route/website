@@ -29,4 +29,9 @@
   --rr-section-padding-desktop: 96px;
   --rr-container-max:           1200px;
   --rr-side-padding-mobile:     20px;
+  
+  /* ── Fonts ─────────────────────────────────────── */
+  --text-hero: clamp(22px, 5vw, 76px);
+
+
 }

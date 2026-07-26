@@ -11,7 +11,8 @@
   /* Brand fonts — CSS vars injected by next/font in app/layout.tsx */
   --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-dm-mono);
-  --font-heading: var(--font-cormorant);
+  /* --font-heading: var(--font-cormorant); */
+  --font-heading: var(--Sreda);
   /* Brand colors exposed as Tailwind utilities */
   --color-chalk-white: var(--rr-chalk-white);
   --color-true-white:  var(--rr-true-white);
