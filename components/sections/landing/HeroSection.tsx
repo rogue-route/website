@@ -175,7 +175,7 @@ export function HeroSection() {
                 "bg-forest-ink text-true-white hover:bg-true-white hover:text-forest-ink",
                 "text-[clamp(0.8rem,1.3vw,1.4rem)]",
                 "px-[clamp(1.2rem,3vw,3rem)]",
-                "py-[clamp(2.2rem,1.5vw,3.4rem)]",
+                "py-[clamp(1.2rem,3vw,3.4rem)]",
                 "rounded-xl"
               )}
             >
