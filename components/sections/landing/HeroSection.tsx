@@ -18,6 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/primitives/Button";
+import MouseScroll from "@/components/primitives/MouseScroll";
 import { cn } from "@/lib/utils";
 
 /**
@@ -73,9 +74,10 @@ export function HeroSection() {
       <div className="relative w-full bg-forest-ink">
         {/* Mobile image — shown below md breakpoint */}
         <motion.div className="relative block aspect-[4/5] w-full md:hidden"
-          variants={neonFlicker} animate="animate">
+          // variants={neonFlicker} animate="animate"
+          >
           <Image
-            src="/images/hero-mobile.png"
+            src="/images/brick-wall-mobile.png"
             alt="RogueRoute skincare — Go Rogue"
             fill
             priority
@@ -87,9 +89,10 @@ export function HeroSection() {
         {/* Desktop image — shown at md and above */}
         <motion.div 
         className="relative hidden aspect-[16/9] w-full md:block" 
-        variants={neonFlicker} animate="animate">
+        // variants={neonFlicker} animate="animate"
+        >
           <Image
-            src="/images/hero-desktop.png"
+            src="/images/brick-wall-desktop.png"
             alt="Rogue Route skincare — Go Rogue"
             fill
             priority
@@ -181,6 +184,9 @@ export function HeroSection() {
             >
               Find your routine <span aria-hidden="true">→</span>
             </Link>
+          </div>
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <MouseScroll />
           </div>
         </motion.div>
       </div>
