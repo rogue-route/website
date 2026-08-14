@@ -403,30 +403,56 @@ const RippleDistortion = ({
 
     let previousX = 0;
     let previousY = 0;
+    let activeTouchId: number | null = null;
+    let activeTouchX = 0;
+    let activeTouchY = 0;
+    let lastEmitTime = 0;
 
     const onMove = (event: PointerEvent) => {
       const cfg = configRef.current;
       if (!cfg.enabled || reduceMotion || cfg.trigger === 'click') return;
       const point = localPoint(event.clientX, event.clientY);
       if (!point) return;
-      const step = Math.max(1, cfg.spacing);
+      const isTouch = event.pointerType === 'touch';
+      const step = Math.max(1, isTouch ? cfg.spacing / 3 : cfg.spacing);
       if (Math.abs(point[0] - previousX) > step || Math.abs(point[1] - previousY) > step) {
         setNewWave(point[0], point[1], 1);
         previousX = point[0];
         previousY = point[1];
+        lastEmitTime = performance.now();
+      }
+      if (isTouch && event.pointerId === activeTouchId) {
+        activeTouchX = point[0];
+        activeTouchY = point[1];
       }
     };
 
     const onDown = (event: PointerEvent) => {
       const cfg = configRef.current;
-      if (!cfg.enabled || reduceMotion || cfg.trigger === 'hover') return;
+      if (!cfg.enabled || reduceMotion) return;
+      const isTouch = event.pointerType === 'touch';
+      if (!isTouch && cfg.trigger === 'hover') return;
       const point = localPoint(event.clientX, event.clientY);
       if (!point) return;
-      setNewWave(point[0], point[1], Math.max(1, cfg.clickStrength));
+      setNewWave(point[0], point[1], isTouch ? 1 : Math.max(1, cfg.clickStrength));
+      previousX = point[0];
+      previousY = point[1];
+      lastEmitTime = performance.now();
+      if (isTouch) {
+        activeTouchId = event.pointerId;
+        activeTouchX = point[0];
+        activeTouchY = point[1];
+      }
+    };
+
+    const onUp = (event: PointerEvent) => {
+      if (event.pointerId === activeTouchId) activeTouchId = null;
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerdown', onDown, { passive: true });
+    window.addEventListener('pointerup', onUp, { passive: true });
+    window.addEventListener('pointercancel', onUp, { passive: true });
 
     let raf = 0;
     let previousTime = 0;
@@ -436,6 +462,10 @@ const RippleDistortion = ({
       const delta = previousTime ? Math.min(0.05, (now - previousTime) / 1000) : 0;
       previousTime = now;
       const cfg = configRef.current;
+      if (activeTouchId !== null && now - lastEmitTime > 55) {
+        setNewWave(activeTouchX, activeTouchY, 1);
+        lastEmitTime = now;
+      }
 
       const growth = reduceMotion ? 0 : 1 - Math.exp(-delta * 1.09);
       const decay = reduceMotion ? 1 : Math.exp((-delta * LIFE_CONSTANT) / Math.max(0.15, cfg.fade));
@@ -479,6 +509,8 @@ const RippleDistortion = ({
       ro.disconnect();
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
       uniformsRef.current = null;
       if (canvas.parentNode === mount) mount.removeChild(canvas);
       const ext = gl.getExtension('WEBGL_lose_context');
