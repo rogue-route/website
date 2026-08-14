@@ -13,6 +13,7 @@
  */
 
 import { NewsletterForm } from "@/components/compounds/forms/NewsletterForm";
+import ShinyText from "@/components/primitives/ShinyText";
 
 export function WaitlistSection() {
   return (
@@ -28,8 +29,12 @@ export function WaitlistSection() {
             {/* Left: copy */}
             <div className="flex flex-col justify-center">
               <p
-                className="mb-3 text-xs font-medium tracking-[0.1em] uppercase text-ash"
-                style={{ fontFamily: "var(--font-dm-sans)" }}
+                className="mb-3 tracking-[0.1em] uppercase text-ash"
+                style={{ 
+                  fontFamily: "var(--font-dm-sans)",
+                  fontWeight: 500, 
+                  fontSize: "clamp(12px, 1.5vw, 14px)",
+                  }}
               >
                 Early access
               </p>
@@ -38,26 +43,37 @@ export function WaitlistSection() {
                 id="waitlist-heading"
                 className="text-carbon"
                 style={{
-                  fontFamily: "var(--font-cormorant)",
-                  fontSize: "clamp(28px, 6vw, 52px)",
-                  fontWeight: 400,
+                  fontFamily: "var(--font-league-spartan)",
+                  fontSize: "clamp(32px, 5vw, 76px)",
+                  color: "var(--rr-forest-ink)",
+                  fontWeight: 700,
                   lineHeight: 1.1,
                   letterSpacing: "-0.01em",
                 }}
               >
-                Be first in line.
+                {/* Be first in line.  */}
+                <ShinyText
+                  text="Be first in line."
+                  color="var(--rr-forest-ink)"
+                  shineColor="rgba(250, 250, 6, 0.95)"
+                  spread={30}
+                  delay={2}
+                  direction="right"
+                  pauseOnHover={true}
+                />
               </h2>
 
               <p
                 className="mt-5 max-w-[40ch] text-ash"
                 style={{
-                  fontFamily: "var(--font-dm-sans)",
-                  fontSize: "16px",
-                  fontWeight: 300,
+                  fontFamily: "var(--font-league-spartan)",
+                  fontSize: "clamp(16px, 2.5vw, 24px)",
+                  fontWeight: 500,
                   lineHeight: 1.65,
+                  letterSpacing: "-0.01em",
                 }}
               >
-                Sign up and we'll let you know the moment we're live — before
+                Sign up and we'll let you know the moment we're live before
                 anyone else. No spam, no pressure, just one email when it
                 matters.
               </p>

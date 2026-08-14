@@ -15,6 +15,7 @@ import { HeroSection } from "@/components/sections/landing/HeroSection";
 import { Introduction } from "@/components/sections/landing/Introduction";
 import { LaunchBanner } from "@/components/sections/landing/LaunchBanner";
 import { WaitlistSection } from "@/components/sections/landing/WaitlistSection";
+import { LaunchBannerFooter } from "@/components/sections/landing/LaunchBannerFooter";
 import { ContactSection } from "@/components/sections/landing/ContactSection";
 import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from "@/lib/constants/seo";
 
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/rogue_heart.svg",
         width: 1200,
         height: 630,
         alt: "RogueRoute — Evidence-based skincare, launching soon",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: ["/images/og-image.jpg"],
+    images: ["/images/rogue_heart.svg"],
   },
 };
 
@@ -51,6 +52,7 @@ export default function LandingPage() {
       {/* <LaunchBanner /> */}
       <WaitlistSection />
       <ContactSection />
+      <LaunchBannerFooter />
     </>
   );
 }
