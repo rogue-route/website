@@ -2,44 +2,61 @@
  * LaunchBanner — Task 2.2
  *
  * Static "Launching Soon" block that sits directly below the Hero section.
- * Server Component — no interactivity, no client JS needed.
+ * Renders as a Server Component; SplitFlapText and BorderGlow are client
+ * components internally (they declare their own "use client"), so no
+ * "use client" is needed here.
  *
  * Design decisions:
  * - Chalk White background keeps it reading as part of the page body,
- *   not a floating alert. True White would float it; Forest Ink would
- *   make it feel like a second hero. Chalk White is correct per PROJECT.md.
- * - Parchment badge is the one warm-accent element per PROJECT.md § 3:
- *   "warm accent (tags)" — exactly the right use case here.
- * - Section padding follows PROJECT.md § 3: 64px mobile, 96px desktop.
- * - Max-width 1200px container, 20px mobile side padding — design system spec.
+ *   not a floating alert per PROJECT.md.
+ * - Horizontal padding matches HeroSection's content overlay exactly
+ *   (px-5 / md:px-10 / lg:px-16) so the left edge of text lines up
+ *   across the Hero → LaunchBanner transition.
+ * - Vertical padding follows PROJECT.md § 3: 64px mobile, 96px desktop
+ *   (previously reversed).
+ * - BorderGlow wraps only the "Coming soon" pill — it's a self-contained
+ *   card component (own bg + radius, cursor-proximity glow), not a
+ *   full-section wrapper. Using it on the whole section fights the
+ *   "reads as part of the page body" decision above.
  * - No countdown timer — TASK.md explicitly says "no countdown logic needed".
  */
 
-import { Badge } from "@/components/primitives/Badge";
+import BorderGlow from "@/components/primitives/BorderGlow";
+import SplitFlapText from "@/components/primitives/SplitFlapText";
 
 export function LaunchBanner() {
   return (
-    <section
-      aria-label="Launch announcement"
-      className="w-full bg-chalk-white"
-    >
-      <div className="mx-auto max-w-[1200px] px-5 py-16 md:py-24">
+    <section aria-label="Launch announcement" className="w-full bg-chalk-white">
+      <div className="w-full px-5 py-16 md:px-10 md:py-20 lg:px-16 lg:py-24">
         {/* Thin top rule — Fog border separates from hero edge */}
-        <div className="border-t border-fog pt-16 md:pt-24">
-          <div className="flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
-
-            {/* Left: badge + headline */}
+        <div className="border-t border-fog pt-10 md:pt-12">
+          <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
+            {/* Left: eyebrow + headline + subhead */}
             <div className="max-w-[52ch]">
-              <Badge variant="accent" className="mb-5 tracking-[0.06em] uppercase">
-                Launching Soon
-              </Badge>
+              <div className="mb-6">
+                <SplitFlapText
+                  words={["LAUNCHING SOON", "COMING SHORTLY"]}
+                  flipDuration={0.12}
+                  stagger={0.06}
+                  cycleDelay={1200}
+                  charset="alphanumeric"
+                  flipsPerChar={8}
+                  tileColor="var(--rr-forest-ink)"
+                  textColor="#f8fafc"
+                  tileRadius={6}
+                  gap={4}
+                  fontSize="clamp(18px, 2.4vw, 38px)"
+                  loop
+                  padTo={12}
+                />
+              </div>
 
               <h2
                 className="text-carbon"
                 style={{
                   fontFamily: "var(--font-cormorant)",
-                  fontSize: "clamp(28px, 6vw, 52px)",
-                  fontWeight: 400,
+                  fontSize: "clamp(32px, 6vw, 76px)",
+                  fontWeight: 600,
                   lineHeight: 1.1,
                   letterSpacing: "-0.01em",
                 }}
@@ -51,8 +68,8 @@ export function LaunchBanner() {
                 className="mt-5 text-ash"
                 style={{
                   fontFamily: "var(--font-dm-sans)",
-                  fontSize: "16px",
-                  fontWeight: 300,
+                  fontSize: "clamp(16px, 1.6vw, 24px)",
+                  fontWeight: 400,
                   lineHeight: 1.65,
                 }}
               >
@@ -62,16 +79,26 @@ export function LaunchBanner() {
               </p>
             </div>
 
-            {/* Right: supporting detail — DM Mono, data-feel */}
+            {/* Right: Coming soon pill — the one spot BorderGlow actually fits */}
             <div className="shrink-0">
-              <p
-                className="text-xs tracking-[0.1em] uppercase text-ash"
-                style={{ fontFamily: "var(--font-dm-mono)", fontWeight: 400 }}
+              <BorderGlow
+                edgeSensitivity={40}
+                glowColor="38 45 65"
+                backgroundColor="var(--rr-parchment)"
+                borderRadius={999}
+                glowRadius={20}
+                glowIntensity={1.1}
+                coneSpread={35}
+                animated
               >
-                — Coming soon
-              </p>
+                <p
+                  className="px-5 py-2.5 text-xs tracking-[0.1em] uppercase text-forest-ink"
+                  style={{ fontFamily: "var(--font-dm-mono)", fontWeight: 500 }}
+                >
+                  — Coming soon
+                </p>
+              </BorderGlow>
             </div>
-
           </div>
         </div>
       </div>

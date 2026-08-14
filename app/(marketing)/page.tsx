@@ -12,6 +12,7 @@
  */
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/landing/HeroSection";
+import { Introduction } from "@/components/sections/landing/Introduction";
 import { LaunchBanner } from "@/components/sections/landing/LaunchBanner";
 import { WaitlistSection } from "@/components/sections/landing/WaitlistSection";
 import { ContactSection } from "@/components/sections/landing/ContactSection";
@@ -46,7 +47,8 @@ export default function LandingPage() {
     // Layout owns <main>; page renders sections directly into it.
     <>
       <HeroSection />
-      <LaunchBanner />
+      <Introduction />
+      {/* <LaunchBanner /> */}
       <WaitlistSection />
       <ContactSection />
     </>

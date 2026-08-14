@@ -147,7 +147,7 @@ export function HeroSection() {
             Minimal Ingredient formulations{" "}
             <span style={{ 
               // color: "var(--rr-parchment)",
-              fontFamily:" var(--font-league-spartan)", fontWeight: 700
+              fontFamily:"var(--font-league-spartan)", fontWeight: 700
             }}><br />For <span style={{color: "rgba(110, 248, 5, 0.8)" }}>Ultra-Sensitive</span> skin.</span>
           </h1>
 
@@ -186,7 +186,7 @@ export function HeroSection() {
             </Link>
           </div>
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <MouseScroll />
+            <MouseScroll targetId="introduction" />
           </div>
         </motion.div>
       </div>
