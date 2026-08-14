@@ -48,7 +48,7 @@ export function ContactSection() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Questions? We'd like to hear them.
+                Questions? We'd like to hear them...
               </h2>
 
               <p
