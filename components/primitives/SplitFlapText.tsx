@@ -139,7 +139,7 @@ const SplitFlapText = ({
 }: SplitFlapTextProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const rafRef = useRef<number | null>(null);
-  const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cycleTimerRef = useRef<number | null>(null);
   const currentTextRef = useRef('');
 
   const sourceWords = Array.isArray(words) && words.length > 0 ? words : DEFAULT_WORDS;
