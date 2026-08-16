@@ -77,7 +77,7 @@ export function HeroSection() {
           // variants={neonFlicker} animate="animate"
           >
           <Image
-            src="/images/brick-wall-mobile.png"
+            src="/images/hero-skin-mobile.png"
             alt="RogueRoute skincare — Go Rogue"
             fill
             priority
@@ -92,7 +92,7 @@ export function HeroSection() {
         // variants={neonFlicker} animate="animate"
         >
           <Image
-            src="/images/brick-wall-desktop.png"
+            src="/images/hero-skin-desktop.png"
             alt="Rogue Route skincare — Go Rogue"
             fill
             priority

@@ -77,6 +77,13 @@ export function Introduction() {
                   fontWeight: 700,
                   lineHeight: 1.05,
                   letterSpacing: "-0.02em",
+                  // WebkitTextStroke: "1px rgba(0, 0, 0, 0.5)",
+                  // textShadow: `
+                  //       -2px -2px 0 black,
+                  //       2px -2px 0 black,
+                  //       -2px  2px 0 black,
+                  //       2px  2px 0 black
+                  //     `,
                   // backgroundColor: "rgba(31, 58, 51,0.60)",
                   // padding: "0.2em 0.4em",
                 }}
