@@ -39,7 +39,7 @@ function GoRogueImage() {
       style={{ 
         height: "clamp(3.5rem, 1.6rem + 3.5vw, 8.5rem)",
         transform: `
-          translateX(clamp(0.2em, 0.1rem + 1vw, 2em)) 
+          translateX(clamp(-0.05em, -0.01rem - 1vw, -0.3em)) 
           translateY(clamp(-0.2em, -0.5rem - 0.5vw, -3.5em))
         `
       }}
