@@ -10,7 +10,7 @@ import { contactSchema } from "@/lib/validations/contact";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 const BREVO_CONTACTS_API_URL = "https://api.brevo.com/v3/contacts";
-const NOTIFY_EMAIL = "rogueroute01@gmail.com";
+const NOTIFY_EMAIL = "himabindu@gorogueroute.com";
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const BREVO_TIMEOUT_MS = 10_000;
