@@ -119,6 +119,11 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("[quiz/submit] Supabase env check:", {
+    hasUrl: Boolean(process.env.SUPABASE_URL),
+    hasKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+  });
+
     const supabase = getSupabase();
     if (!supabase) {
       console.error("[quiz/submit] Supabase configuration is missing.");
