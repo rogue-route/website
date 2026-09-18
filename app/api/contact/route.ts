@@ -1,68 +1,255 @@
 /**
- * Contact API — Task 6.1
+ * Contact API
  *
- * Validates name/email/message, then sends the message to the founder
- * via Resend. Falls back to console.log if RESEND_API_KEY is not set.
- *
- * Sender:  noreply@gorogueroute.com  (must be verified in Resend dashboard)
- * Recipient: set via NOTIFY_EMAIL env var (defaults to abhivellala@gmail.com)
+ * Validates and stores contact submissions in Supabase before sending a
+ * plain-text notification through Brevo. Temporary Supabase diagnostics are
+ * redacted before server logging and are never returned to the browser.
  */
-import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 import { contactSchema } from "@/lib/validations/contact";
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+const BREVO_CONTACTS_API_URL = "https://api.brevo.com/v3/contacts";
+const NOTIFY_EMAIL = "rogueroute01@gmail.com";
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const BREVO_TIMEOUT_MS = 10_000;
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL ?? "abhivellala@gmail.com";
-const FROM_EMAIL =
-  process.env.FROM_EMAIL ?? "RogueRoute <onboarding@resend.dev>";
+const rateLimitEntries = new Map<
+  string,
+  { count: number; resetAt: number }
+>();
+
+function errorResponse(error: string, status: number) {
+  return Response.json({ ok: false, error }, { status });
+}
+
+function redactDiagnostic(
+  value: string | null,
+  sensitiveValues: Array<string | undefined>
+) {
+  if (!value) return value;
+
+  let redacted = value;
+
+  for (const sensitiveValue of sensitiveValues) {
+    if (sensitiveValue) {
+      redacted = redacted.replaceAll(sensitiveValue, "[REDACTED]");
+    }
+  }
+
+  return redacted;
+}
+
+async function getRateLimitKey(request: Request) {
+  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0];
+  const address =
+    request.headers.get("cf-connecting-ip") ?? forwardedFor?.trim() ?? "unknown";
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(address)
+  );
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0")
+  ).join("");
+}
+
+async function isRateLimited(request: Request) {
+  const now = Date.now();
+
+  for (const [key, entry] of rateLimitEntries) {
+    if (entry.resetAt <= now) rateLimitEntries.delete(key);
+  }
+
+  const key = await getRateLimitKey(request);
+  const entry = rateLimitEntries.get(key);
+
+  if (!entry) {
+    rateLimitEntries.set(key, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) return true;
+
+  entry.count += 1;
+  return false;
+}
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    if (await isRateLimited(request)) {
+      return errorResponse(
+        "Too many requests. Please wait before trying again.",
+        429
+      );
+    }
+
+    let body: unknown;
+
+    try {
+      body = await request.json();
+    } catch {
+      return errorResponse("Invalid request.", 400);
+    }
+
     const result = contactSchema.safeParse(body);
 
     if (!result.success) {
-      return Response.json(
-        { ok: false, error: result.error.issues[0]?.message ?? "Invalid input." },
-        { status: 400 }
+      return errorResponse(
+        result.error.issues[0]?.message ?? "Invalid input.",
+        400
+      );
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      return errorResponse(
+        "Contact service is temporarily unavailable. Please try again later.",
+        503
       );
     }
 
     const { name, email, message } = result.data;
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { error: insertError } = await supabase
+      .from("contact_submissions")
+      .insert({ name, email, message });
 
-    if (resend) {
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: NOTIFY_EMAIL,
-        replyTo: email,
-        subject: `New contact message from ${name} — RogueRoute`,
-        html: `
-          <p style="font-family:sans-serif;font-size:15px;color:#111110">
-            A visitor sent a message via the RogueRoute contact form.
-          </p>
-          <table style="font-family:sans-serif;font-size:14px;color:#111110;border-collapse:collapse">
-            <tr><td style="padding:4px 12px 4px 0;color:#6B6B67">Name</td><td>${name}</td></tr>
-            <tr><td style="padding:4px 12px 4px 0;color:#6B6B67">Email</td><td><a href="mailto:${email}">${email}</a></td></tr>
-          </table>
-          <div style="margin-top:16px;padding:12px 16px;background:#F8F7F4;border-left:3px solid #1C3A2F;font-family:sans-serif;font-size:14px;color:#111110;line-height:1.65;white-space:pre-wrap">${message}</div>
-          <p style="font-family:monospace;font-size:12px;color:#6B6B67;margin-top:16px">
-            ${new Date().toISOString()}
-          </p>
-        `,
+    if (insertError) {
+      const sensitiveValues = [
+        supabaseUrl,
+        supabaseServiceRoleKey,
+        process.env.BREVO_API_KEY,
+        name,
+        email,
+        message,
+      ];
+
+      console.error("[contact] Supabase insert failed", {
+        code: redactDiagnostic(insertError.code, sensitiveValues),
+        message: redactDiagnostic(insertError.message, sensitiveValues),
+        details: redactDiagnostic(insertError.details, sensitiveValues),
+        hint: redactDiagnostic(insertError.hint, sensitiveValues),
       });
-    } else {
-      // Dev fallback: no API key configured
-      console.log("[contact] new message (Resend not configured):", { name, email, message });
+
+      return errorResponse(
+        "Unable to submit your message right now. Please try again later.",
+        503
+      );
+    }
+
+    const brevoApiKey = process.env.BREVO_API_KEY;
+    const brevoFromEmail = process.env.BREVO_FROM_EMAIL;
+    const brevoContactUsListId = Number(
+      process.env.BREVO_CONTACT_US_LIST_ID
+    );
+
+    if (
+      !brevoApiKey ||
+      !brevoFromEmail ||
+      !Number.isInteger(brevoContactUsListId) ||
+      brevoContactUsListId <= 0
+    ) {
+      return errorResponse(
+        "Your message was saved, but the notification could not be sent.",
+        503
+      );
+    }
+
+    const contactsController = new AbortController();
+    const contactsTimeout = setTimeout(
+      () => contactsController.abort(),
+      BREVO_TIMEOUT_MS
+    );
+    let contactsResponse: Response;
+
+    try {
+      contactsResponse = await fetch(BREVO_CONTACTS_API_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "api-key": brevoApiKey,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          attributes: { FNAME: name },
+          listIds: [brevoContactUsListId],
+          updateEnabled: true,
+        }),
+        signal: contactsController.signal,
+      });
+    } catch {
+      return errorResponse(
+        "Your message was saved, but the notification could not be sent.",
+        502
+      );
+    } finally {
+      clearTimeout(contactsTimeout);
+    }
+
+    if (!contactsResponse.ok) {
+      return errorResponse(
+        "Your message was saved, but the notification could not be sent.",
+        502
+      );
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), BREVO_TIMEOUT_MS);
+    let brevoResponse: Response;
+
+    try {
+      brevoResponse = await fetch(BREVO_API_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "api-key": brevoApiKey,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          sender: { name: "RogueRoute Website", email: brevoFromEmail },
+          to: [{ email: NOTIFY_EMAIL }],
+          replyTo: { name, email },
+          subject: "New RogueRoute contact form submission",
+          textContent: [
+            "A visitor sent a message through the RogueRoute contact form.",
+            "",
+            `Name: ${name}`,
+            `Email: ${email}`,
+            "",
+            "Message:",
+            message,
+          ].join("\n"),
+        }),
+        signal: controller.signal,
+      });
+    } catch {
+      return errorResponse(
+        "Your message was saved, but the notification could not be sent.",
+        502
+      );
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (!brevoResponse.ok) {
+      return errorResponse(
+        "Your message was saved, but the notification could not be sent.",
+        502
+      );
     }
 
     return Response.json({ ok: true });
-  } catch (err) {
-    console.error("[contact] error:", err);
-    return Response.json(
-      { ok: false, error: "Something went wrong. Please try again." },
-      { status: 500 }
-    );
+  } catch {
+    return errorResponse("Something went wrong. Please try again.", 500);
   }
 }
