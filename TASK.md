@@ -139,9 +139,9 @@ Work top to bottom. Check a box only when the deliverable actually renders/works
 ## Phase 6 — Launch
 
 - [x] **6.1 Real email delivery**
-  Connect waitlist + contact forms to Resend (free tier).
-  *Deliverable: real emails arrive.*
-  > Note: `resend` npm package installed. Both `app/api/waitlist/route.ts` and `app/api/contact/route.ts` updated. Pattern: `new Resend(process.env.RESEND_API_KEY)` — if the env var is absent (local dev without credentials) the route falls back to `console.log` and still returns `ok: true`, so the site never breaks. Waitlist sends a plain notification to `NOTIFY_EMAIL`. Contact sends the full name/email/message with `replyTo` set to the visitor's email so the founder can reply directly. `NOTIFY_EMAIL` defaults to `abhivellala@gmail.com` (test address — update in Vercel env vars to founder's address). `FROM_EMAIL` defaults to `onboarding@resend.dev` until `gorogueroute.com` is verified in Resend dashboard. See `DEPLOY.md` for domain verification steps.
+  Connect the contact and waitlist flows to Brevo.
+  *Deliverable: contacts are synchronized to their configured lists and required notifications arrive.*
+  > Note: Waitlist contacts are upserted into the dedicated Brevo Waitlist list. Optional Waitlist founder notifications use Brevo and are controlled by `WAITLIST_FOUNDER_NOTIFICATIONS_ENABLED`. Contact retains its separate Brevo Contact Us list and notification flow.
 
 - [x] **6.2 Real data storage**
   Connect quiz submission to Supabase (free tier) — simple `quiz_responses` table.
@@ -151,7 +151,7 @@ Work top to bottom. Check a box only when the deliverable actually renders/works
 - [x] **6.3 Deploy**
   Deploy to Vercel, connect domain, set environment variables.
   *Deliverable: live site on your domain.*
-  > Note: Code is deploy-ready. `next.config.ts` updated with `images` config. `DEPLOY.md` created with all env vars, Supabase table SQL, and Resend domain verification steps. Vercel deployment and DNS cutover from Wix must be done manually — step-by-step instructions below the task list. `NEXT_PUBLIC_SITE_URL` must be set to `https://gorogueroute.com` in Vercel for OG images to resolve correctly.
+  > Note: Code is deploy-ready. `next.config.ts` updated with `images` config. `DEPLOY.md` contains the required environment variables and Supabase setup notes. Vercel deployment and DNS cutover from Wix must be done manually. `NEXT_PUBLIC_SITE_URL` must be set to `https://gorogueroute.com` in Vercel for OG images to resolve correctly.
 
 - [x] **6.4 (Optional) Analytics**
   Add Plausible or Fathom if you want visit/conversion tracking. Skip if budget-constrained — not required to launch.

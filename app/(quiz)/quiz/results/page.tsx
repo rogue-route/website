@@ -3,7 +3,7 @@
  *
  * Shows the final combined result after both stages.
  * Submits all answers to /api/quiz/submit on first render.
- * Offers email capture via NewsletterForm (reused compound).
+ * Offers waitlist signup with an optional newsletter opt-in.
  *
  * "use client" — reads from QuizContext, submits data, manages local state.
  */
@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuiz } from "@/components/layouts/QuizProvider";
-import { NewsletterForm } from "@/components/compounds/forms/NewsletterForm";
+import { WaitlistForm } from "@/components/compounds/forms/WaitlistForm";
 import { buttonVariants } from "@/components/primitives/Button";
 import { cn } from "@/lib/utils";
 import {
@@ -154,13 +154,13 @@ export default function QuizResultsPage() {
         </p>
       </div>
 
-      {/* ── Email capture ────────────────────────────────────────────── */}
+      {/* ── Waitlist signup ──────────────────────────────────────────── */}
       <div className="rounded-xl border border-fog bg-true-white p-5">
         <p
           className="mb-1 text-xs font-medium tracking-[0.08em] uppercase text-ash"
           style={{ fontFamily: "var(--font-dm-sans)" }}
         >
-          Stay informed
+          Join the waitlist
         </p>
         <p
           className="mb-5 text-carbon"
@@ -173,7 +173,7 @@ export default function QuizResultsPage() {
         >
           Be first to know when we launch.
         </p>
-        <NewsletterForm />
+        <WaitlistForm showNewsletterOptIn />
       </div>
 
       {/* Submission error — non-blocking, informational only */}

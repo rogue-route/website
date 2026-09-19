@@ -10,11 +10,18 @@ Never commit real keys to git — `.env.local` is already in `.gitignore`.
 | Variable | Where to get it | Example value |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Your domain | `https://gorogueroute.com` |
-| `RESEND_API_KEY` | resend.com → API Keys | `re_abc123...` |
-| `NOTIFY_EMAIL` | Your choice | `abhivellala@gmail.com` |
-| `FROM_EMAIL` | After verifying domain in Resend | `RogueRoute <noreply@gorogueroute.com>` |
 | `SUPABASE_URL` | Supabase → Settings → API | `https://xxxx.supabase.co` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → service_role | `eyJhbGc...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API server secret/service role | `sb_secret_...` |
+| `BREVO_API_KEY` | Brevo → SMTP & API → API Keys | Keep server-side |
+| `BREVO_WAITLIST_LIST_ID` | Brevo → Contacts → Lists → Rogue Route Waitlist | Numeric list ID |
+
+Optional Waitlist founder notification variables:
+
+| Variable | Purpose |
+|---|---|
+| `WAITLIST_FOUNDER_NOTIFICATIONS_ENABLED` | Set to `true` to enable; any other value disables notifications |
+| `BREVO_FROM_EMAIL` | Verified Brevo sender address |
+| `NOTIFY_EMAIL` | Founder notification recipient |
 
 > **SUPABASE_SERVICE_ROLE_KEY** must never be prefixed with `NEXT_PUBLIC_`.
 > It is server-side only. Never expose it to the browser.
@@ -23,8 +30,7 @@ Never commit real keys to git — `.env.local` is already in `.gitignore`.
 
 ## Local development setup
 
-Create a file called `.env.local` in the `rogueroute/` folder with the variables above.
-The app works without them — API routes fall back to `console.log` when keys are absent.
+Create a file called `.env.local` in the `rogueroute/` folder with the variables above, then fully restart the Next.js development server. The Waitlist API returns a configuration error when required credentials are absent or when `SUPABASE_SERVICE_ROLE_KEY` is recognizably a public credential.
 
 ---
 
@@ -48,10 +54,4 @@ create table quiz_responses (
 
 ---
 
-## Resend domain verification
-
-Until `gorogueroute.com` is verified in Resend, emails send from `onboarding@resend.dev`.
-To use `noreply@gorogueroute.com`:
-1. Go to resend.com → Domains → Add Domain → enter `gorogueroute.com`
-2. Add the DNS records Resend shows you (in your DNS provider — not Wix)
-3. Once verified, set `FROM_EMAIL=RogueRoute <noreply@gorogueroute.com>` in Vercel
+The Waitlist table migration is tracked separately at `supabase/migrations/20260919_create_waitlist_submissions.sql`. Review and apply it manually to the intended Supabase project; do not weaken RLS or add a public insert policy.

@@ -149,18 +149,14 @@ Reserved for later (folders only, no pages): `/products`, `/collections`, `/blog
 
 ---
 
-## 7. Data & services (v1 vs later)
+## 7. Data & services
 
-**V1 (free / local):**
-- Quiz answers + waitlist + contact submissions → API routes that store to a simple JSON/local store or console-log placeholder.
-- Deployed to Vercel free tier.
-
-**Phase 6 (only once the site is live and validated):**
-- Real email delivery via Resend (free tier)
-- Real data storage via Supabase (free tier) for quiz responses
-- Privacy-respecting analytics (Plausible or Fathom) — optional, not urgent
-
-Do not wire up paid services before Phase 6 in `TASK.md`.
+- Waitlist submissions are validated by the server and upserted into Supabase by normalized email.
+- Brevo creates or updates each Waitlist contact and adds it only to the configured Rogue Route Waitlist list.
+- Optional Waitlist founder notifications use Brevo and are controlled by a server-side enable/disable environment flag.
+- Contact submissions use Supabase and Brevo through their separate Contact flow.
+- Quiz responses are stored in Supabase.
+- Privacy-respecting analytics (Plausible or Fathom) remain optional.
 
 ---
 

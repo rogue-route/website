@@ -2,7 +2,7 @@
  * WaitlistSection — Task 2.3
  *
  * Page-level section block. Server Component shell — the interactive
- * NewsletterForm compound is rendered inside (it handles its own "use client"
+ * WaitlistForm compound is rendered inside (it handles its own "use client"
  * boundary), so this wrapper stays a Server Component. ShinyText and
  * ShinyMask are Client Components too, and Server Components can render
  * Client Components directly, so this file needs no "use client" of its own.
@@ -14,7 +14,7 @@
  * Section padding follows PROJECT.md § 3: 64px mobile / 96px desktop.
  */
 
-import { NewsletterForm } from "@/components/compounds/forms/NewsletterForm";
+import { WaitlistForm } from "@/components/compounds/forms/WaitlistForm";
 import ShinyText from "@/components/primitives/ShinyText";
 import ShinyMask from "@/components/primitives/ShinyMask";
 
@@ -155,7 +155,7 @@ export function WaitlistSection() {
               {/* Right: form */}
               <div className="flex flex-col justify-center">
                 <div className="rounded-lg border border-fog bg-true-white p-6 md:p-8">
-                  <NewsletterForm />
+                  <WaitlistForm />
                 </div>
               </div>
 
