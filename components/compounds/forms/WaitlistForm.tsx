@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button } from "@/components/primitives/Button";
 import { Input } from "@/components/primitives/Input";
 import { Label } from "@/components/primitives/Label";
+import { newsletterSchema } from "@/lib/validations/newsletter";
 import { waitlistSchema } from "@/lib/validations/waitlist";
 
 const waitlistFormSchema = z.object({
@@ -16,6 +17,7 @@ const waitlistFormSchema = z.object({
 });
 
 type FormState = "idle" | "loading" | "success" | "error";
+type NewsletterState = "idle" | "loading" | "success" | "error";
 type FieldName = "name" | "email";
 
 type WaitlistFormProps = {
@@ -36,6 +38,9 @@ export function WaitlistForm({
   const [formState, setFormState] = useState<FormState>("idle");
   const [message, setMessage] = useState("");
   const [errorField, setErrorField] = useState<FieldName | null>(null);
+  const [newsletterState, setNewsletterState] =
+    useState<NewsletterState>("idle");
+  const [newsletterRetryEmail, setNewsletterRetryEmail] = useState("");
 
   function clearError() {
     if (formState === "error") {
@@ -45,10 +50,35 @@ export function WaitlistForm({
     }
   }
 
+  async function subscribeToNewsletterApi(normalizedEmail: string) {
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: normalizedEmail }),
+      });
+      const data: { ok: boolean } = await response.json();
+      return response.ok && data.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  async function retryNewsletter() {
+    if (!newsletterRetryEmail) return;
+
+    setNewsletterState("loading");
+    const subscribed = await subscribeToNewsletterApi(newsletterRetryEmail);
+    setNewsletterState(subscribed ? "success" : "error");
+    if (subscribed) setNewsletterRetryEmail("");
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
     setErrorField(null);
+    setNewsletterState("idle");
+    setNewsletterRetryEmail("");
 
     const result = waitlistFormSchema.safeParse({ name, email });
 
@@ -62,29 +92,48 @@ export function WaitlistForm({
       return;
     }
 
+    const wantsNewsletter = showNewsletterOptIn && subscribeToNewsletter;
+    const newsletterResult = wantsNewsletter
+      ? newsletterSchema.safeParse({ email: result.data.email })
+      : null;
+
+    if (newsletterResult && !newsletterResult.success) {
+      setFormState("error");
+      setErrorField("email");
+      setMessage(
+        newsletterResult.error.issues[0]?.message ?? "Invalid email."
+      );
+      return;
+    }
+
     setFormState("loading");
 
     try {
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...result.data,
-          subscribeToNewsletter:
-            showNewsletterOptIn && subscribeToNewsletter,
-        }),
+        body: JSON.stringify(result.data),
       });
       const data: { ok: boolean; error?: string } = await response.json();
 
-      if (data.ok) {
-        setFormState("success");
-        setName("");
-        setEmail("");
-        setSubscribeToNewsletter(false);
-      } else {
+      if (!data.ok) {
         setFormState("error");
         setMessage(data.error ?? "Something went wrong. Please try again.");
+        return;
       }
+
+      if (newsletterResult?.success) {
+        setNewsletterState("loading");
+        const normalizedEmail = newsletterResult.data.email;
+        const subscribed = await subscribeToNewsletterApi(normalizedEmail);
+        setNewsletterState(subscribed ? "success" : "error");
+        if (!subscribed) setNewsletterRetryEmail(normalizedEmail);
+      }
+
+      setFormState("success");
+      setName("");
+      setEmail("");
+      setSubscribeToNewsletter(false);
     } catch {
       setFormState("error");
       setMessage("Network error. Please try again.");
@@ -130,6 +179,37 @@ export function WaitlistForm({
         >
           We&apos;ll reach out as soon as we launch.
         </p>
+        {newsletterState === "success" && (
+          <p
+            className="mt-3 text-sm text-ash"
+            style={{ fontFamily: "var(--font-dm-sans)" }}
+          >
+            Your newsletter subscription is confirmed.
+          </p>
+        )}
+        {newsletterState === "error" && (
+          <div className="mt-4 space-y-3">
+            <p
+              className="text-sm text-terracotta"
+              style={{ fontFamily: "var(--font-dm-sans)" }}
+              role="alert"
+            >
+              You joined the waitlist, but the newsletter subscription could
+              not be completed.
+            </p>
+            <Button type="button" variant="outline" onClick={retryNewsletter}>
+              Retry newsletter subscription
+            </Button>
+          </div>
+        )}
+        {newsletterState === "loading" && (
+          <p
+            className="mt-3 text-sm text-ash"
+            style={{ fontFamily: "var(--font-dm-sans)" }}
+          >
+            Retrying newsletter subscription…
+          </p>
+        )}
       </div>
     );
   }

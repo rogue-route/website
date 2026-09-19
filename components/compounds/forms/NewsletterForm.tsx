@@ -1,9 +1,9 @@
 "use client";
 /**
- * NewsletterForm — Task 2.3
+ * NewsletterForm
  *
- * Compound component: owns local submit/success/error state,
- * calls /api/waitlist, shows inline feedback.
+ * Email-only newsletter signup with local submit/success/error state.
+ * Calls the dedicated /api/newsletter endpoint.
  *
  * Why "use client": useState + form submission handler.
  * Why compound (not section): no API fetch at render time,
@@ -22,7 +22,7 @@ import { useState } from "react";
 import { Input } from "@/components/primitives/Input";
 import { Label } from "@/components/primitives/Label";
 import { Button } from "@/components/primitives/Button";
-import { waitlistSchema } from "@/lib/validations/waitlist";
+import { newsletterSchema } from "@/lib/validations/newsletter";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -36,7 +36,7 @@ export function NewsletterForm() {
     setMessage("");
 
     // Client-side Zod validation — avoid unnecessary network request
-    const result = waitlistSchema.safeParse({ email });
+    const result = newsletterSchema.safeParse({ email });
     if (!result.success) {
       setFormState("error");
       setMessage(result.error.issues[0]?.message ?? "Invalid email.");
@@ -46,10 +46,10 @@ export function NewsletterForm() {
     setFormState("loading");
 
     try {
-      const res = await fetch("/api/waitlist", {
+      const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(result.data),
       });
       const data: { ok: boolean; error?: string } = await res.json();
 
@@ -99,13 +99,13 @@ export function NewsletterForm() {
             fontWeight: 500,
           }}
         >
-          You're on the list.
+          You&apos;re subscribed.
         </p>
         <p
           className="mt-1 text-sm text-ash"
           style={{ fontFamily: "var(--font-dm-sans)" }}
         >
-          We'll reach out as soon as we launch.
+          Watch your inbox for considered skincare notes and RogueRoute updates.
         </p>
       </div>
     );
@@ -114,9 +114,9 @@ export function NewsletterForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="waitlist-email">Email address</Label>
+        <Label htmlFor="newsletter-email">Email address</Label>
         <Input
-          id="waitlist-email"
+          id="newsletter-email"
           type="email"
           placeholder="your@email.com"
           value={email}
@@ -131,7 +131,7 @@ export function NewsletterForm() {
           disabled={formState === "loading"}
           aria-invalid={formState === "error"}
           aria-describedby={
-            formState === "error" ? "waitlist-error" : undefined
+            formState === "error" ? "newsletter-error" : undefined
           }
           autoComplete="email"
           required
@@ -139,7 +139,7 @@ export function NewsletterForm() {
         {/* Inline error message */}
         {formState === "error" && message && (
           <p
-            id="waitlist-error"
+            id="newsletter-error"
             role="alert"
             className="text-xs text-terracotta"
             style={{ fontFamily: "var(--font-dm-sans)" }}
@@ -154,7 +154,7 @@ export function NewsletterForm() {
         disabled={formState === "loading"}
         className="w-full"
       >
-        {formState === "loading" ? "Joining…" : "Join the waitlist"}
+        {formState === "loading" ? "Subscribing…" : "Subscribe"}
       </Button>
     </form>
   );

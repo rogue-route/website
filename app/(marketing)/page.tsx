@@ -2,7 +2,7 @@
  * Landing page — Task 2.5
  *
  * Composes all Phase 2 sections:
- *   HeroSection (2.1) → LaunchBanner (2.2) → WaitlistSection (2.3) → ContactSection (2.4)
+ *   HeroSection → Introduction → WaitlistSection → NewsletterSection → ContactSection
  *
  * Footer is injected by app/(marketing)/layout.tsx via MarketingLayout.
  *
@@ -15,6 +15,7 @@ import { HeroSection } from "@/components/sections/landing/HeroSection";
 import { Introduction } from "@/components/sections/landing/Introduction";
 import { LaunchBanner } from "@/components/sections/landing/LaunchBanner";
 import { WaitlistSection } from "@/components/sections/landing/WaitlistSection";
+import { NewsletterSection } from "@/components/sections/landing/NewsletterSection";
 import { LaunchBannerFooter } from "@/components/sections/landing/LaunchBannerFooter";
 import { ContactSection } from "@/components/sections/landing/ContactSection";
 import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from "@/lib/constants/seo";
@@ -51,6 +52,7 @@ export default function LandingPage() {
       <Introduction />
       {/* <LaunchBanner /> */}
       <WaitlistSection />
+      <NewsletterSection />
       <ContactSection />
       <LaunchBannerFooter />
     </>
