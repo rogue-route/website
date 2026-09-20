@@ -21,7 +21,7 @@ export function ContactSection() {
       className="w-full bg-chalk-white"
     >
       <div className="mx-auto max-w-[1200px] px-5 py-12 md:py-12">
-        <div className="border-t border-fog pt-16 md:pt-24">
+        <div className="border-t-[3px] border-fog pt-16 md:pt-24">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
 
             {/* Left: copy */}

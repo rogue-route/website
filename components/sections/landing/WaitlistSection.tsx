@@ -56,7 +56,7 @@ export function WaitlistSection() {
       className="w-full bg-chalk-white"
     >
       <div className="mx-auto max-w-[1200px] px-5 py-24 md:py-24">
-        <div className="border-t border-fog pt-16 md:pt-24">
+        <div className="border-t-[3px] border-fog pt-16 md:pt-24">
 
             {/*
               Early access label, heading, and logo live above the grid —

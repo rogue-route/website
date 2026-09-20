@@ -287,7 +287,7 @@ export function WaitlistForm({
       <Button
         type="submit"
         disabled={formState === "loading"}
-        className="w-full"
+        className="w-full h-11 px-6 text-base"
       >
         {formState === "loading" ? "Joining…" : "Join the waitlist"}
       </Button>

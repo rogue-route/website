@@ -142,7 +142,7 @@ export function ContactForm() {
         <Input
           id="contact-name"
           type="text"
-          placeholder="Jane Smith"
+          placeholder="Your Name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -243,7 +243,7 @@ export function ContactForm() {
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full"
+        className="w-full h-11 px-6 text-base"
       >
         {isLoading ? "Sending…" : "Send message"}
       </Button>

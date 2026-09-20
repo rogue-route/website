@@ -32,7 +32,7 @@ export function Introduction() {
       className="w-full bg-chalk-white px-5 pt-8 md:px-10 md:pt-10 lg:px-16 lg:pt-12"
     >
       {/* Separation line from Hero */}
-      <div className="border-t border-fog pt-6 md:pt-8 lg:pt-10">
+      <div className="border-t-[3px] border-fog pt-6 md:pt-8 lg:pt-10">
         {/* Ripple visual container */}
         <div className="relative min-h-[420px] w-full overflow-hidden md:min-h-[500px] lg:min-h-[560px]">
           

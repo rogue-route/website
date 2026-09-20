@@ -152,7 +152,7 @@ export function NewsletterForm() {
       <Button
         type="submit"
         disabled={formState === "loading"}
-        className="w-full"
+        className="w-full h-11 px-6 text-base"
       >
         {formState === "loading" ? "Subscribing…" : "Subscribe"}
       </Button>
