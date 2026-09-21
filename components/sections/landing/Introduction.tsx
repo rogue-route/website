@@ -25,6 +25,7 @@ import RippleDistortion from "@/components/primitives/RippleDistortion";
 import ShinyText from "@/components/primitives/ShinyText";
 import BlurText from "@/components/primitives/BlurText";
 
+const SHOW_RIPPLE_BORDER = true;
 export function Introduction() {
   return (
     <section
@@ -34,8 +35,10 @@ export function Introduction() {
       {/* Separation line from Hero */}
       <div className="border-t-[3px] border-fog pt-6 md:pt-8 lg:pt-10">
         {/* Ripple visual container */}
-        <div className="relative min-h-[420px] w-full overflow-hidden md:min-h-[500px] lg:min-h-[560px]">
-          
+        {/* <div className="relative min-h-[420px] w-full overflow-hidden md:min-h-[500px] lg:min-h-[560px]"> */}
+          <div className={`relative min-h-[420px] w-full overflow-hidden md:min-h-[500px] lg:min-h-[560px] 
+          ${SHOW_RIPPLE_BORDER ? "border-2 border-black" : ""}`}
+>
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <RippleDistortion

@@ -38,7 +38,7 @@ export function NewsletterSection() {
       {/* Separation line from waitlist section */}
       {/* <div className="border-t border-fog pt-6 md:pt-8 lg:pt-10"> */}
       {/* Background layer: fills the whole section, never affects layout */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+      {/* <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <SideRays
           speed={2.5}
           rayColor1="#EAB308"
@@ -52,14 +52,15 @@ export function NewsletterSection() {
           falloff={1.6}
           opacity={0.3}
         />
-      </div>
+      </div> */}
 
       {/* Content layer: sits above the rays, height comes from the content */}
-      <div className="relative z-10 mx-auto max-w-[1800px] px-5 md:py-28">
+      {/* <div className="relative z-10 mx-auto max-w-[1800px] px-5 md:py-28"> */}
+      <div className="relative z-10 mx-auto max-w-[1800px] px-5 py-[clamp(4rem,10vw,4rem)]">
         <div className="mx-auto flex max-w-[1800px] flex-col items-center text-center">
-          <span aria-hidden="true" className="mb-4 text-3xl md:text-4xl">
+          {/* <span aria-hidden="true" className="mb-4 text-3xl md:text-4xl">
             🧭
-          </span>
+          </span> */}
 
           <div className="flex flex-col justify-center">
             <p
@@ -104,8 +105,10 @@ export function NewsletterSection() {
             </p>
           </div>
 
-          <div className="mt-8 flex w-full max-w-[800px] flex-col justify-center">
-            <div className="rounded-lg border border-fog bg-true-white p-6 md:p-8">
+          <div className="mt-[clamp(1.5rem,4vw,2.5rem)] 
+          flex w-[clamp(17rem,100%,50rem)] 
+          max-w-full flex-col justify-center">
+            <div className="rounded-lg border border-fog bg-true-white p-[clamp(1rem,4vw,2rem)]">
               <NewsletterForm />
             </div>
           </div>
